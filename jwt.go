@@ -14,18 +14,21 @@ import (
 type ValidateFn func(string, *siam.Session) error
 
 type JWTSetupOptions struct {
+	Secret           string
 	GetSessionMethod string
 	GetSessionTopic  string
 	ValidateFunction ValidateFn
 	EnrichFunction   func(*kaos.Context, *siam.Session)
 }
 
-func JWT(headerName, secret string, requiredJWT bool, opts JWTSetupOptions) func(ctx *kaos.Context) (bool, error) {
-	if headerName == "" {
-		headerName = "Authorization"
-	}
+func JWT(opts JWTSetupOptions) func(ctx *kaos.Context) (bool, error) {
+	headerName := "Authorization"
 
 	return func(ctx *kaos.Context) (bool, error) {
+		if opts.Secret == "" {
+			return false, errors.New("secret is blank")
+		}
+
 		req := ctx.Data().Get("http-request", new(http.Request)).(*http.Request)
 		if token := req.Header.Get(headerName); token != "" {
 			if strings.HasPrefix(token, "Bearer ") {
@@ -34,7 +37,7 @@ func JWT(headerName, secret string, requiredJWT bool, opts JWTSetupOptions) func
 
 			bc := jwt.StandardClaims{}
 			tkn, e := jwt.ParseWithClaims(token, &bc, func(tkn *jwt.Token) (interface{}, error) {
-				return []byte(secret), nil
+				return []byte(opts.Secret), nil
 			})
 
 			if e != nil {
@@ -60,9 +63,6 @@ func JWT(headerName, secret string, requiredJWT bool, opts JWTSetupOptions) func
 					return false, errors.New("invalid pubsub topic")
 				}
 				if e = ev.Publish(getSessionTopic, codekit.M{}.Set("ID", bc.Id), sess); e != nil {
-					if requiredJWT {
-						return false, errors.New("invalid access token")
-					}
 					return true, nil
 				}
 
