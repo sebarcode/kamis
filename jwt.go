@@ -29,7 +29,7 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context) (bool, error) {
 			return false, errors.New("secret is blank")
 		}
 
-		req := ctx.Data().Get("http-request", new(http.Request)).(*http.Request)
+		req := ctx.Data().Get("http_request", new(http.Request)).(*http.Request)
 		if token := req.Header.Get(headerName); token != "" {
 			if strings.HasPrefix(token, "Bearer ") {
 				token = strings.ReplaceAll(token, "Bearer ", "")
