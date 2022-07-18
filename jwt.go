@@ -35,7 +35,7 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context) (bool, error) {
 				token = strings.ReplaceAll(token, "Bearer ", "")
 			}
 
-			bc := jwt.StandardClaims{}
+			bc := siam.AuthJwt{}
 			tkn, e := jwt.ParseWithClaims(token, &bc, func(tkn *jwt.Token) (interface{}, error) {
 				return []byte(opts.Secret), nil
 			})
@@ -68,12 +68,11 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context) (bool, error) {
 
 			default:
 				fn := opts.ValidateFunction
-				if fn == nil {
-					return false, errors.New("invalid function to validate token")
-				}
-				e = fn(bc.Id, sess)
-				if e != nil {
-					return true, nil
+				if fn != nil {
+					e = fn(bc.Id, sess)
+					if e != nil {
+						return true, nil
+					}
 				}
 			}
 
@@ -83,7 +82,8 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context) (bool, error) {
 
 			ctx.Data().Set("jwt_session_id", sess.SessionID)
 			ctx.Data().Set("jwt_reference_id", sess.ReferenceID)
-			ctx.Data().Set("jwt_data", sess.Data)
+			ctx.Data().Set("jwt_data", bc.Data)
+			ctx.Data().Set("jwt_session_data", sess.Data)
 		}
 		return true, nil
 	}

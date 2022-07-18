@@ -6,7 +6,7 @@ require (
 	git.kanosolution.net/kano/kaos v0.2.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/sebarcode/codekit v0.1.2
-	github.com/sebarcode/siam v0.0.1
+	github.com/sebarcode/siam v0.0.2-0.20220709002310-5d040b3dfb00
 )
 
 require (

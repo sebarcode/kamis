@@ -477,6 +477,8 @@ github.com/sebarcode/logger v0.1.1 h1:qy8Ip5UacaK4LFE0hN/HXUCIu3ZBe4uta8WHQ067jf
 github.com/sebarcode/logger v0.1.1/go.mod h1:dBcREBmgQLUN1kAAs5t9y7dN5RUp+OYEsk4rqUWuM5Q=
 github.com/sebarcode/siam v0.0.1 h1:rsR73C8EnvtT6/pViqTcG2Tde7AKBI9H6XxoJQ77El0=
 github.com/sebarcode/siam v0.0.1/go.mod h1:Ba2Hw23/SvQ4igiyV4eLLiuTGG34XKQQZo9yFUL+Wq0=
+github.com/sebarcode/siam v0.0.2-0.20220709002310-5d040b3dfb00 h1:aUozlEr/KAILPoYI8eLsa8d1lr2YvPIC0RA+kLVEcKo=
+github.com/sebarcode/siam v0.0.2-0.20220709002310-5d040b3dfb00/go.mod h1:sxYnLJRCMxQJVdg4ZCByZR7OQt7qzXtQLi3SfIsIhdc=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/sirupsen/logrus v1.4.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/sirupsen/logrus v1.4.1/go.mod h1:ni0Sbl8bgC9z8RoU9G6nDWqqs/fq4eDPysMBDgk/93Q=
