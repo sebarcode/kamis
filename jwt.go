@@ -48,7 +48,7 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context) (bool, error) {
 				return true, nil
 			}
 
-			ctx.Data().Set("jwt_token_id", bc.Id)
+			ctx.Data().Set("jwt_token", token)
 
 			sess := new(siam.Session)
 			switch opts.GetSessionMethod {
