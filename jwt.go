@@ -21,10 +21,10 @@ type JWTSetupOptions struct {
 	EnrichFunction   func(*kaos.Context, *siam.Session)
 }
 
-func JWT(opts JWTSetupOptions) func(ctx *kaos.Context) (bool, error) {
+func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, error) {
 	headerName := "Authorization"
 
-	return func(ctx *kaos.Context) (bool, error) {
+	return func(ctx *kaos.Context, parm interface{}) (bool, error) {
 		if opts.Secret == "" {
 			return false, errors.New("secret is blank")
 		}
@@ -89,8 +89,8 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context) (bool, error) {
 	}
 }
 
-func NeedJWT() func(ctx *kaos.Context) (bool, error) {
-	return func(ctx *kaos.Context) (bool, error) {
+func NeedJWT() func(ctx *kaos.Context, parm interface{}) (bool, error) {
+	return func(ctx *kaos.Context, parm interface{}) (bool, error) {
 		jwtRefID := ctx.Data().Get("jwt_reference_id", "").(string)
 		if jwtRefID == "" {
 			return false, errors.New("invalid access token")

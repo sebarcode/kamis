@@ -3,7 +3,7 @@ module github.com/sebarcode/kamis
 go 1.18
 
 require (
-	git.kanosolution.net/kano/kaos v0.2.1
+	git.kanosolution.net/kano/kaos v0.2.5-0.20220831133444-15d5f8961373
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/sebarcode/codekit v0.1.2
 	github.com/sebarcode/siam v0.0.2-0.20220709002310-5d040b3dfb00
@@ -11,9 +11,9 @@ require (
 
 require (
 	git.kanosolution.net/kano/appkit v0.0.3 // indirect
-	git.kanosolution.net/kano/dbflex v1.2.1 // indirect
-	github.com/ariefdarmawan/byter v0.0.1 // indirect
-	github.com/ariefdarmawan/datahub v0.2.2 // indirect
+	git.kanosolution.net/kano/dbflex v1.2.5 // indirect
+	github.com/ariefdarmawan/byter v0.0.2 // indirect
+	github.com/ariefdarmawan/datahub v0.2.6 // indirect
 	github.com/ariefdarmawan/reflector v0.0.3 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/eaciit/toolkit v0.0.0-20210610161449-593d5fadf78e // indirect
