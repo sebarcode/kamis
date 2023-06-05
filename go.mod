@@ -5,7 +5,7 @@ go 1.18
 replace github.com/ariefdarmawan/flexpg v0.7.0 => github.com/ariefdarmawan/flexpg v0.7.1
 
 require (
-	git.kanosolution.net/kano/kaos v0.2.5
+	git.kanosolution.net/kano/kaos v0.3.2-0.20230605122827-0cf60e4e1675
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/sebarcode/codekit v0.1.2
 	github.com/sebarcode/siam v0.0.2-0.20220709002310-5d040b3dfb00
