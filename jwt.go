@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strings"
+	"time"
 
 	"git.kanosolution.net/kano/kaos"
 	"github.com/golang-jwt/jwt"
@@ -42,6 +43,10 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 
 			if e != nil {
 				return true, nil
+			}
+
+			if bc.StandardClaims.ExpiresAt != 0 && bc.StandardClaims.ExpiresAt < time.Now().Unix() {
+				return false, errors.New("credentials token is expired")
 			}
 
 			if !tkn.Valid {
