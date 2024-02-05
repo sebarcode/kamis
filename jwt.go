@@ -60,14 +60,14 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 			case "NATS":
 				ev, _ := ctx.DefaultEvent()
 				if ev == nil {
-					return false, errors.New("invalid pubsub handler")
+					return false, errors.New("invalid event hub")
 				}
 
 				getSessionTopic := opts.GetSessionTopic
 				if getSessionTopic == "" {
-					return false, errors.New("invalid pubsub topic")
+					return false, errors.New("invalid topic")
 				}
-				if e = ev.Publish(getSessionTopic, codekit.M{}.Set("ID", bc.Id), sess); e != nil {
+				if e = ev.Publish(getSessionTopic, codekit.M{}.Set("ID", bc.Id), sess, nil); e != nil {
 					return true, nil
 				}
 
