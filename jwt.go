@@ -45,7 +45,9 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 				return true, nil
 			}
 
-			if bc.StandardClaims.ExpiresAt != 0 && bc.StandardClaims.ExpiresAt < time.Now().Unix() {
+			expiryAt := bc.StandardClaims.ExpiresAt
+			timeNow := time.Now().UnixMilli()
+			if expiryAt != 0 && expiryAt < timeNow {
 				return false, errors.New("credentials token is expired")
 			}
 
