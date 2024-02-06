@@ -45,17 +45,18 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 				return true, nil
 			}
 
+			if !tkn.Valid {
+				return true, nil
+			}
+
 			expiryAt := bc.StandardClaims.ExpiresAt
 			timeNow := time.Now().UnixMilli()
 			if expiryAt != 0 && expiryAt < timeNow {
 				return false, errors.New("credentials token is expired")
 			}
 
-			if !tkn.Valid {
-				return true, nil
-			}
-
 			ctx.Data().Set("jwt_token", token)
+			ctx.Data().Set("jwt_data", bc.Data)
 
 			sess := new(siam.Session)
 			switch opts.GetSessionMethod {
@@ -70,6 +71,7 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 					return false, errors.New("invalid topic")
 				}
 				if e = ev.Publish(getSessionTopic, codekit.M{}.Set("ID", bc.Id), sess, nil); e != nil {
+					ctx.Log().Warningf("get session fail: topic %s | id %s | msg %s", getSessionTopic, bc.Id, e.Error())
 					return true, nil
 				}
 
@@ -89,7 +91,6 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 
 			ctx.Data().Set("jwt_session_id", sess.SessionID)
 			ctx.Data().Set("jwt_reference_id", sess.ReferenceID)
-			ctx.Data().Set("jwt_data", bc.Data)
 			ctx.Data().Set("jwt_session_data", sess.Data)
 		}
 		return true, nil
