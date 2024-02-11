@@ -18,6 +18,7 @@ type JWTSetupOptions struct {
 	Secret           string
 	GetSessionMethod string
 	GetSessionTopic  string
+	DisableExpiry    bool
 	ValidateFunction ValidateFn
 	EnrichFunction   func(*kaos.Context, *siam.Session)
 }
@@ -51,7 +52,7 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 
 			expiryAt := bc.StandardClaims.ExpiresAt
 			timeNow := time.Now().UnixMilli()
-			if expiryAt != 0 && expiryAt < timeNow {
+			if expiryAt != 0 && expiryAt < timeNow && !opts.DisableExpiry {
 				return false, errors.New("credentials token is expired")
 			}
 
