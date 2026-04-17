@@ -7,10 +7,15 @@ import (
 	"time"
 
 	"git.kanosolution.net/kano/kaos"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/sebarcode/codekit"
 	"github.com/sebarcode/siam"
 )
+
+type localAuthJwt struct {
+	jwt.RegisteredClaims
+	Data codekit.M
+}
 
 type ValidateFn func(string, *siam.Session) error
 
@@ -36,7 +41,7 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 				token = strings.ReplaceAll(token, "Bearer ", "")
 			}
 
-			bc := siam.AuthJwt{}
+			bc := localAuthJwt{}
 			tkn, e := jwt.ParseWithClaims(token, &bc, func(tkn *jwt.Token) (interface{}, error) {
 				return []byte(opts.Secret), nil
 			})
@@ -49,7 +54,10 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 				return true, nil
 			}
 
-			expiryAt := bc.StandardClaims.ExpiresAt
+			var expiryAt int64
+			if bc.RegisteredClaims.ExpiresAt != nil {
+				expiryAt = bc.RegisteredClaims.ExpiresAt.Time.UnixMilli()
+			}
 			timeNow := time.Now().UnixMilli()
 			if expiryAt != 0 && expiryAt < timeNow {
 				return false, errors.New("credentials token is expired")
@@ -70,15 +78,15 @@ func JWT(opts JWTSetupOptions) func(ctx *kaos.Context, parm interface{}) (bool, 
 				if getSessionTopic == "" {
 					return false, errors.New("invalid topic")
 				}
-				if e = ev.Publish(getSessionTopic, codekit.M{}.Set("ID", bc.Id), sess, nil); e != nil {
-					ctx.Log().Warningf("get session fail: topic %s | id %s | msg %s", getSessionTopic, bc.Id, e.Error())
+				if e = ev.Publish(getSessionTopic, codekit.M{}.Set("ID", bc.RegisteredClaims.ID), sess, nil); e != nil {
+					ctx.Log().Warningf("get session fail: topic %s | id %s | msg %s", getSessionTopic, bc.RegisteredClaims.ID, e.Error())
 					return true, nil
 				}
 
 			default:
 				fn := opts.ValidateFunction
 				if fn != nil {
-					e = fn(bc.Id, sess)
+					e = fn(bc.RegisteredClaims.ID, sess)
 					if e != nil {
 						return true, nil
 					}
